@@ -2,6 +2,8 @@
 
 A minimal web app that fetches and displays random human portrait images from a Google Photos shared album. If no images are found, it automatically falls back to free sources like Pixabay, Unsplash, and Lorem Picsum.
 
+<img width="939" height="612" alt="Screenshot 2025-09-10 134321" src="https://github.com/user-attachments/assets/f967b151-3a40-465c-91a5-ba5b3871cbed" />
+
 ## Features
 - Scrapes images from a Google Photos shared link using Selenium.
 - Displays a random image in a modern, centered canvas.
