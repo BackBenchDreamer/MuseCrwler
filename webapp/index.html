@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random Google Photos Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #181818;
+            color: #fff;
+        }
+        .canvas {
+            width: 40vw;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px #222;
+            margin-bottom: 20px;
+            overflow: hidden; /* ensures no overflow */
+        }
+
+        .canvas img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* ensures full image fits */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #aaa;
+            background: #222;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+            background: #444;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Google Photos Image</h1>
+    <div class="canvas">
+        <div id="loader" style="display:none; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            <div style="width:48px; height:48px; border:6px solid #444; border-top:6px solid #fff; border-radius:50%; animation: spin 1s linear infinite;"></div>
+        </div>
+        <img id="photo" src="" alt="Random album image" style="display:none;" />
+    </div>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <div class="controls">
+        <button onclick="fetchImage()">Fetch Random Image</button>
+        <button onclick="fullscreenImage()">Fullscreen</button>
+    </div>
+    <script>
+        async function fetchImage() {
+            const loader = document.getElementById('loader');
+            const img = document.getElementById('photo');
+            loader.style.display = 'flex';
+            img.style.display = 'none';
+            try {
+                const res = await fetch('/api/random-image');
+                const data = await res.json();
+                if (data.url) {
+                    img.src = data.url;
+                    img.onload = () => {
+                        loader.style.display = 'none';
+                        img.style.display = 'block';
+                    };
+                } else {
+                    loader.style.display = 'none';
+                    img.style.display = 'none';
+                    alert('No images found from Google Photos or Pixabay!');
+                }
+            } catch (e) {
+                loader.style.display = 'none';
+                img.style.display = 'none';
+                alert('No images found from Google Photos or Pixabay!');
+            }
+        }
+        function fullscreenImage() {
+            const img = document.getElementById('photo');
+            if (img.requestFullscreen) {
+                img.requestFullscreen();
+            } else if (img.webkitRequestFullscreen) {
+                img.webkitRequestFullscreen();
+            } else if (img.msRequestFullscreen) {
+                img.msRequestFullscreen();
+            }
+        }
+    // Fetch one image on load
+    window.onload = fetchImage;
+    </script>
+</body>
+</html>
